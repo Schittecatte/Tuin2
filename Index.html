@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+
+    <script src="RGraph.common.core.js"></script>
+    <script src="RGraph.thermometer.js"></script>
+</head>
+
+<body>
+
+    <canvas id="cvs" width="100" height="400">
+        [No canvas support]
+    </canvas>
+
+
+
+
+    <div class="container">
+        <div class="row">
+
+            <div id="back">
+                <div>
+                    <img id="myImage" src="https://www.w3schools.com/js/pic_bulboff.gif" />
+                </div>
+                <input type="range" min="1" max="254" value="50" class="slider" id="myRange" />
+                <div>
+                    <input type="color" id="myColor" />
+                </div>
+            </div>
+
+
+            <div id="back1">
+                <div>
+                    <img id="myImage1" src="https://www.w3schools.com/js/pic_bulboff.gif" />
+                </div>
+                <input type="range" min="1" max="254" value="50" class="slider" id="myRange1" />
+                <div>
+                    <input type="color" id="myColor1" />
+                </div>
+            </div>
+
+            <div id="back2">
+                <div>
+                    <img id="myImage2" src="https://www.w3schools.com/js/pic_bulboff.gif" />
+                </div>
+                <input type="range" min="1" max="254" value="50" class="slider" id="myRange2" />
+                <div>
+                    <input type="color" id="myColor2" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!--script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+        var thermometer;
+
+        function draw_thermometer(value) {
+
+            if (typeof (thermometer) == 'undefined') {
+                thermometer = new RGraph.Thermometer({
+                    id: 'cvs',
+                    min: 0,
+                    max: 100,
+                    value: value,
+                    options: {
+                    }
+                }).draw();
+            }
+            else {
+                thermometer.value = value;
+                thermometer.grow();
+
+            }
+        }
+
+        function update_thermometer() {
+            $.get("dht11_les.php", function (data) {
+                draw_thermometer(JSON.parse(data).temperature);
+            }
+            );
+            window.setTimeout(update_thermometer, 2000);
+        }
+
+        $(document).ready(function () {
+            window.onload = function () {
+                update_thermometer()
+            };
+        });
+
+
+
+
+        // Hue lampen
+        jQuery.each(["put", "delete"], function (i, method) {
+            jQuery[method] = function (url, data, callback, type) {
+                if (jQuery.isFunction(data)) {
+                    type = type || callback;
+                    callback = data;
+                    data = undefined;
+                }
+
+                return jQuery.ajax({
+                    url: url,
+                    type: method,
+                    dataType: type,
+                    data: data,
+                    success: callback
+                });
+            };
+        });
+
+        $(window).on("load", function () {
+
+            $.get("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/1", (result) => {
+                console.log("Get succeed!" + JSON.stringify(result));
+                if (result.state.on) {
+                    $("#myImage").attr("src", "https://www.w3schools.com/js/pic_bulbon.gif");
+                    $("#myRange").attr("disabled", false);
+                    $("#myRange").val(result.state.bri);
+                    $("#myColor").attr("disabled", false);
+                }
+            });
+
+            $("#myRange").change($event => {
+                $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/1/state", `{"bri":${$("#myRange").val()}}`,
+                    (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+
+            });
+            //Led state 1
+            $("#myColor").change($event => {
+                //console.log($("#myColor").val());
+                color = parseInt($("#myColor").val().replace('#', '0x'));
+                //normalize rgb colors
+                red = (color >> 16) / 255;
+                green = ((color >> 8) & 0xFF) / 255;
+                blue = (color & 0xFF) / 255;
+                //apply gamma
+                red = (red > 0.04045) ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : (red / 12.92);
+                green = (green > 0.04045) ? Math.pow((green + 0.055) / (1.0 + 0.055), 2.4) : (green / 12.92);
+                blue = (blue > 0.04045) ? Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4) : (blue / 12.92);
+                //Convert the RGB values to XYZ using the Wide RGB D65 conversion formula
+                X = red * 0.664511 + green * 0.154324 + blue * 0.162028;
+                Y = red * 0.283881 + green * 0.668433 + blue * 0.047685;
+                Z = red * 0.000088 + green * 0.072310 + blue * 0.986039;
+                //x and y
+                x = X / (X + Y + Z);
+                y = Y / (X + Y + Z);
+                $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/1/state", `{"xy":[${x},${y}]}`,
+                    (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+
+            });
+
+            //Led state 2
+            $("#myColor1").change($event => {
+                //console.log($("#myColor").val());
+                color = parseInt($("#myColor1").val().replace('#', '0x'));
+                //normalize rgb colors
+                red = (color >> 16) / 255;
+                green = ((color >> 8) & 0xFF) / 255;
+                blue = (color & 0xFF) / 255;
+                //apply gamma
+                red = (red > 0.04045) ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : (red / 12.92);
+                green = (green > 0.04045) ? Math.pow((green + 0.055) / (1.0 + 0.055), 2.4) : (green / 12.92);
+                blue = (blue > 0.04045) ? Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4) : (blue / 12.92);
+                //Convert the RGB values to XYZ using the Wide RGB D65 conversion formula
+                X = red * 0.664511 + green * 0.154324 + blue * 0.162028;
+                Y = red * 0.283881 + green * 0.668433 + blue * 0.047685;
+                Z = red * 0.000088 + green * 0.072310 + blue * 0.986039;
+                //x and y
+                x = X / (X + Y + Z);
+                y = Y / (X + Y + Z);
+                $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/2/state", `{"xy":[${x},${y}]}`,
+                    (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+
+            });
+            //Led state 3
+            $("#myColor2").change($event => {
+                //console.log($("#myColor").val());
+                color = parseInt($("#myColor2").val().replace('#', '0x'));
+                //normalize rgb colors
+                red = (color >> 16) / 255;
+                green = ((color >> 8) & 0xFF) / 255;
+                blue = (color & 0xFF) / 255;
+                //apply gamma
+                red = (red > 0.04045) ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : (red / 12.92);
+                green = (green > 0.04045) ? Math.pow((green + 0.055) / (1.0 + 0.055), 2.4) : (green / 12.92);
+                blue = (blue > 0.04045) ? Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4) : (blue / 12.92);
+                //Convert the RGB values to XYZ using the Wide RGB D65 conversion formulas
+                X = red * 0.664511 + green * 0.154324 + blue * 0.162028;
+                Y = red * 0.283881 + green * 0.668433 + blue * 0.047685;
+                Z = red * 0.000088 + green * 0.072310 + blue * 0.986039;
+                //x and y
+                x = X / (X + Y + Z);
+                y = Y / (X + Y + Z);
+                $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/3/state", `{"xy":[${x},${y}]}`,
+                    (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+
+            });
+
+
+            //image
+            $("#myImage").click(
+                ($event) => {
+                    console.log("image clicked");
+                    if ($("#myImage").attr("src") == "https://www.w3schools.com/js/pic_bulboff.gif") {
+                        $("#myImage").attr("src", "https://www.w3schools.com/js/pic_bulbon.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/1/state", '{"on":true}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange").attr("disabled", false);
+                        $("#myColor").attr("disabled", false);
+                        $("#back").css("background-color", $("#myColor").val());
+
+                    }
+                    else {
+                        $("#myImage").attr("src", "https://www.w3schools.com/js/pic_bulboff.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/1/state", '{"on":false}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange").attr("disabled", true);
+                        $("#myColor").attr("disabled", true);
+                    }
+                }
+            );
+            //image1
+            $("#myImage1").click(
+                ($event) => {
+                    console.log("image clicked");
+                    if ($("#myImage1").attr("src") == "https://www.w3schools.com/js/pic_bulboff.gif") {
+                        $("#myImage1").attr("src", "https://www.w3schools.com/js/pic_bulbon.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/2/state", '{"on":true}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange1").attr("disabled", false);
+                        $("#myColor1").attr("disabled", false);
+                        $("#back1").css("background-color", $("#myColor1").val());
+
+                    }
+                    else {
+                        $("#myImage1").attr("src", "https://www.w3schools.com/js/pic_bulboff.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/2/state", '{"on":false}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange1").attr("disabled", true);
+                        $("#myColor1").attr("disabled", true);
+                    }
+                }
+            );
+            //image2
+            $("#myImage2").click(
+                ($event) => {
+                    console.log("image clicked");
+                    if ($("#myImage2").attr("src") == "https://www.w3schools.com/js/pic_bulboff.gif") {
+                        $("#myImage2").attr("src", "https://www.w3schools.com/js/pic_bulbon.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/3/state", '{"on":true}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange2").attr("disabled", false);
+                        $("#myColor2").attr("disabled", false);
+                        $("#back2").css("background-color", $("#myColor2").val());
+
+                    }
+                    else {
+                        $("#myImage2").attr("src", "https://www.w3schools.com/js/pic_bulboff.gif");
+                        $.put("http://10.198.116.13/api/KtbcxWwa9uPkjr7Kt-tUnr0HESgXHQXCC8Gr3J-m/lights/3/state", '{"on":false}',
+                            (result) => { console.log("put succeed!" + JSON.stringify(result)); });
+                        $("#myRange2").attr("disabled", true);
+                        $("#myColor2").attr("disabled", true);
+                    }
+                }
+            );
+
+        });
+    </script>
+
+</body>
+
+</html>

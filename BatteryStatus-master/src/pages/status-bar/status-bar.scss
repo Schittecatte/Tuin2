@@ -1,0 +1,16 @@
+status-bar {
+  #status {
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+  }
+  .healthy {
+    background-color: #5cb85c;
+  }
+  .danger {
+    background-color: #f0ad4e;
+  }
+  .critical {
+    background-color: #d9534f;
+  }
+}

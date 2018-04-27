@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+  
+</ion-header>
+
+<ion-content class="home" padding>
+  <h2>Flashlight is {{flashstatus}}</h2>
+  <button fab primary fab-bottom fab-center (click)="LightOn()">
+  <ion-icon name="flash"></ion-icon>
+  </button>
+  <ion-tabs>
+      <ion-tab tabIcon="contact" [root]="tab1Page"></ion-tab>
+    <ion-tab tabIcon="compass" [root]="tab2Page"></ion-tab>
+    <ion-tab tabIcon="analytics" [root]="tab3Page"></ion-tab>
+    </ion-tabs>
+</ion-content>
+

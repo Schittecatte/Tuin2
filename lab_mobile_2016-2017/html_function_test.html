@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Javascript in Body</h1>
+        <p id="demo"></p>
+
+        <script>
+
+            function makeAdder(x) {
+            // parameter `x` is an inner variable
+            // inner function `add()` uses `x`, so
+            // it has a "closure" over it
+                function add(y) {
+                    return y + x;
+                };
+                return add;
+            }
+
+            // `plusOne` gets a reference to the inner `add(..)`
+            // function with closure over the `x` parameter of
+            // the outer `makeAdder(..)`
+            var plusOne = makeAdder( 1 );
+            // `plusTen` gets a reference to the inner `add(..)`
+            // function with closure over the `x` parameter of
+            // the outer `makeAdder(..)`
+            var plusTen = makeAdder( 10 );
+            console.log(plusOne( 3 )); // 4 <-- 1 + 3
+            console.log(plusOne( 41 )); // 42 <-- 1 + 41
+            console.log(plusTen( 13 )); // 23 <-- 10 + 13
+
+
+            function User(){
+                var username, password;
+                function doLogin(user,pw) {
+                    username = user;
+                    password = pw;
+                    // do the rest of the login work
+                }
+
+                function showUsername()
+                {
+                    console.log(username);
+                }
+
+                function checkPassword(pwd)
+                {
+                    return pwd==password;
+                }
+
+                var publicAPI = {
+                    login: doLogin,
+                    showUsername: showUsername,
+                    checkPassword: checkPassword
+
+                };
+                return publicAPI;
+            }
+            // create a `User` module instance
+            var fred = User();
+            fred.login( "raspberry", "pi" );
+            fred.showUsername();
+            if(fred.checkPassword("pi"))
+                console.log("pi is correct");
+            else
+                console.log("pi is wrong password");
+            if(fred.checkPassword("pi2"))
+                console.log("pi2 is correct");
+            else
+                console.log("pi2 is wrong password");
+
+            document.getElementById("demo").innerHTML="My First Javascript";
+            
+        </script>
+    </body>
+</html>
+
