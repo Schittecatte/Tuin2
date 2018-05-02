@@ -1,0 +1,21 @@
+﻿@model IEnumerable<WebApplication2.Models.GetUserGroups>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroupName)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupName)
+            </td>
+            <td>
+                @Html.ActionLink("Join group", "IdGroup", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("Back to List", "LocalUsers")
